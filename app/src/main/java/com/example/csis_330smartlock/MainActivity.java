@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     //:( :( :( :( :( :( :(
+    //Hi David
     EditText firstName;
     EditText lastName;
 
