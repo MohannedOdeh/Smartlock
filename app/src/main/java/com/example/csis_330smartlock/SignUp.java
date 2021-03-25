@@ -81,7 +81,7 @@ public class SignUp extends AppCompatActivity {
                     String userPassword = password.getText().toString();
                     createAccount(userEmail, userPassword, users, user);
                 } else {
-                    progressBar.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.GONE);
                     btnSignUp.setVisibility(View.VISIBLE);
                 }
             }
@@ -124,7 +124,7 @@ public class SignUp extends AppCompatActivity {
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(SignUp.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.INVISIBLE);
+                            progressBar.setVisibility(View.GONE);
                             btnSignUp.setVisibility(View.VISIBLE);
                         }
                     }

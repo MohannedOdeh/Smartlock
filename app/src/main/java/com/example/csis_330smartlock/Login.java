@@ -12,6 +12,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,7 @@ public class Login extends AppCompatActivity {
     EditText password;
     MaterialButton btnLogin;
     TextView txtSignUp;
+    ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private static final String TAG = "CustomAuthActivity";
 
@@ -41,6 +43,7 @@ public class Login extends AppCompatActivity {
         password = findViewById(R.id.password);
         btnLogin = findViewById(R.id.btnLogin);
         txtSignUp = findViewById(R.id.txtSignUp);
+        progressBar = findViewById(R.id.progress);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +52,9 @@ public class Login extends AppCompatActivity {
                     String userEmail = email.getText().toString();
                     String userPassword = password.getText().toString();
                     signIn(userEmail, userPassword);
+                }   else {
+                    progressBar.setVisibility(View.GONE);
+                    btnLogin.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -74,7 +80,8 @@ public class Login extends AppCompatActivity {
     }
 
     boolean checkDataEntered() {
-
+        progressBar.setVisibility(View.VISIBLE);
+        btnLogin.setVisibility(View.INVISIBLE);
         if (!isEmail(email)) {
             Toast.makeText(this, "Enter an e-mail address to register", Toast.LENGTH_SHORT).show();
             email.setError("Enter valid email!");
@@ -122,7 +129,8 @@ public class Login extends AppCompatActivity {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(Login.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-
+                            progressBar.setVisibility(View.GONE);
+                            btnLogin.setVisibility(View.VISIBLE);
                         }
                     }
                 });
