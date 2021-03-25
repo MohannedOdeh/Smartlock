@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 
 public class MainActivity extends AppCompatActivity {
+    //:) :) :) :) :) :) :) :) :) :) :) :)
     EditText firstName;
     EditText lastName;
 
