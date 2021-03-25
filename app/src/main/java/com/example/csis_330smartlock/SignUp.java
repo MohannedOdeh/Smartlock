@@ -78,57 +78,7 @@ public class SignUp extends AppCompatActivity {
                 users.document(userEmail).set(user);
             }
         });
-    /*    btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                if (checkDataEntered())
-                    Toast.makeText(SignUp.this, "Sign up successful", Toast.LENGTH_SHORT).show();
-
-
-                if (checkDataEntered()) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Starting Write and Read data with URL
-                            //Creating array for parameters
-                            String[] field = new String[4];
-                            field[0] = "firstname";
-                            field[1] = "lastname";
-                            field[2] = "email";
-                            field[3] = "password";
-                            //Creating array for data
-                            String[] data = new String[4];
-                            data[0] = firstName.getText().toString();
-                            data[1] = lastName.getText().toString();
-                            data[2] = email.getText().toString();
-                            data[3] = password.getText().toString();
-                            PutData putData = new PutData("http://10.0.2.2/login/signup.php", "POST", field, data);
-                            if (putData.startPut()) {
-                                if (putData.onComplete()) {
-                                    //progressBar.setVisibility(View.GONE);
-                                    String result = putData.getResult();
-                                    if (result.equals("Sign Up Success")) {
-                                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getApplicationContext(), Login.class);
-                                        startActivity(intent);
-                                        finish();
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-                                    }
-                                    Log.i("PutData", result);
-                                }
-                            }
-                        }
-                    });
-                } else {
-
-                }
-
-            }
-        });
-*/
 
     }
     private void createAccount(String email, String password) {
