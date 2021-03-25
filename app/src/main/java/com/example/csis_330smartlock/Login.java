@@ -42,15 +42,14 @@ public class Login extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         txtSignUp = findViewById(R.id.txtSignUp);
 
-
-
-
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            String userEmail = email.getText().toString();
-            String userPassword = password.getText().toString();
-            signIn(userEmail, userPassword);
+                if (checkDataEntered()) {
+                    String userEmail = email.getText().toString();
+                    String userPassword = password.getText().toString();
+                    signIn(userEmail, userPassword);
+                }
             }
         });
 
@@ -90,6 +89,21 @@ public class Login extends AppCompatActivity {
         return true;
     }
 
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            reload();
+        }
+    }
+
+    private void reload() {
+        // Go to main menu
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     private void signIn(String email, String password) {
         // [START sign_in_with_email]
@@ -102,9 +116,7 @@ public class Login extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                            Intent test = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(test);
-                            finish();
+                            reload();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
