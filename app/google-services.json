@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1093389424072",
+    "project_id": "smartlock-ea6fb",
+    "storage_bucket": "smartlock-ea6fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093389424072:android:4fe4355f66190f949a9cfd",
+        "android_client_info": {
+          "package_name": "com.example.csis_330smartlock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093389424072-vmkrkrvdllqlpscsh9acq1g6og83of2m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFqUUz3zVtQNlySoGwTeWOZu2YBScq3p8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093389424072-vmkrkrvdllqlpscsh9acq1g6og83of2m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CSIS-330 SmartLock</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="full_name">Full Name</string>
+    <string name="e_mail">E-mail</string>
+</resources>
