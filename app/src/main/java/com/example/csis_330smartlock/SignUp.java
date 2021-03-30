@@ -44,7 +44,7 @@ public class SignUp extends AppCompatActivity {
     MaterialButton btnSignUp;
     TextView txtLogin;
     ProgressBar progressBar;
-    private FirebaseAuth mAuth;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +60,6 @@ public class SignUp extends AppCompatActivity {
         progressBar = findViewById(R.id.progress);
 
         mAuth = FirebaseAuth.getInstance();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference users = db.collection("users");
-        Map<String, Object> user = new HashMap<>();
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +76,7 @@ public class SignUp extends AppCompatActivity {
                 if (checkDataEntered()) {
                     String userEmail = email.getText().toString();
                     String userPassword = password.getText().toString();
-                    createAccount(userEmail, userPassword, users, user);
+                    createAccount(userEmail, userPassword);
                 } else {
                     progressBar.setVisibility(View.GONE);
                     btnSignUp.setVisibility(View.VISIBLE);
@@ -107,7 +104,7 @@ public class SignUp extends AppCompatActivity {
         }
     }
 
-    private void createAccount(String email, String password, CollectionReference users, Map user) {
+    private void createAccount(String email, String password) {
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -117,7 +114,7 @@ public class SignUp extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser fbUser = mAuth.getCurrentUser();
-                            updateDB(users, user);
+                            updateDB();
                             updateUI(fbUser);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -139,7 +136,13 @@ public class SignUp extends AppCompatActivity {
         finish();
     }
 
-    private void updateDB(CollectionReference users, Map user) {
+    private void updateDB() {
+        // Initialize Firestore variables
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference users = db.collection("users");
+        Map<String, Object> user = new HashMap<>();
+
+        // Write first and last name into Firestore database
         String fn = firstName.getText().toString();
         String ln = lastName.getText().toString();
         String userEmail = email.getText().toString();
