@@ -31,13 +31,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         logout = findViewById(R.id.btnLogout);
-        welcome = findViewById(R.id.welcome);
         mAuth = FirebaseAuth.getInstance();
 
-        if (mAuth.getCurrentUser() != null) {
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-            welcome.setText("Welcome " + currentUser.getDisplayName());
-        }
+//        if (mAuth.getCurrentUser() != null) {
+//            FirebaseUser currentUser = mAuth.getCurrentUser();
+//            welcome.setText("Welcome " + currentUser.getDisplayName());
+//        }
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,5 +47,10 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void toLockers (View view) {
+        Intent intent = new Intent(this, LockerRegistration.class);
+        startActivity(intent);
     }
 }
