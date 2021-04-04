@@ -54,7 +54,7 @@ public class LockerRegistration extends AppCompatActivity{
     private void createBuildingSpinner() {
         spinnerBuilding = findViewById(R.id.spinnerBuilding);
         ArrayList<String> buildings = new ArrayList<>();
-        buildings.add("--Choose a building--");
+        buildings.add("-");
         lockers.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
