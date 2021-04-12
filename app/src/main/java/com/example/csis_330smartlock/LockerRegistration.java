@@ -2,12 +2,18 @@ package com.example.csis_330smartlock;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +36,8 @@ public class LockerRegistration extends AppCompatActivity{
     Spinner spinnerBuilding;
     Spinner spinnerFloor;
     TextView textView;
+    String selectedBuilding;
+    String selectedFloor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +48,6 @@ public class LockerRegistration extends AppCompatActivity{
         lockers = db.collection("lockers");
         textView = findViewById(R.id.textView);
 
-        spinnerBuilding = findViewById(R.id.spinnerBuilding);
         createBuildingSpinner();
         //createSpinner(spinnerBuilding, "building");
 
@@ -59,6 +66,7 @@ public class LockerRegistration extends AppCompatActivity{
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()) {
+                    // Loop through all entries in "lockers" collection
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
                         Map<String, Object> map = document.getData();
@@ -66,15 +74,17 @@ public class LockerRegistration extends AppCompatActivity{
 //                            buildingNames.add(entry.getKey());
 //                        }
                         String building = map.get("building").toString();
+                        // Add the building name to ArrayList only if it doesn't already exist in it
                         if(!buildings.contains(building)) {
                             buildings.add(building);
                         }
                         Collections.sort(buildings);
-
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(LockerRegistration.this, android.R.layout.simple_spinner_item, buildings);
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinnerBuilding.setAdapter(adapter);
                     }
+
+                    // Create a spinner using the Array List
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(LockerRegistration.this, android.R.layout.simple_spinner_item, buildings);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerBuilding.setAdapter(adapter);
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
@@ -85,50 +95,11 @@ public class LockerRegistration extends AppCompatActivity{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
-                    textView.setText("Hellooo");
+                    //textView.setText("Hellooo");
                     //if (parent.getId()==R.id.spinnerBuilding) {
-                    String building = parent.getItemAtPosition(position).toString();
-                    Toast.makeText(parent.getContext(), building, Toast.LENGTH_SHORT).show();
-
-                    spinnerFloor = findViewById(R.id.spinnerFloor);
-
-                    ArrayList<String> floors = new ArrayList<>();
-                    lockers.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
-                                    Map<String, Object> map = document.getData();
-//                        for(Map.Entry<String, Object> entry : map.entrySet()) {
-//                            buildingNames.add(entry.getKey());
-//                        }
-                                    if (map.get("building").equals(building)) {
-                                        String floor = map.get("floor").toString();
-                                        if (!floors.contains(floor))
-                                            floors.add(floor);
-                                    }
-                                }
-                                Collections.sort(floors);
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(LockerRegistration.this, android.R.layout.simple_spinner_item, floors);
-                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                spinnerFloor.setAdapter(adapter);
-                                spinnerFloor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                                    }
-
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) {
-
-                                    }
-                                });
-                            } else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
+                    selectedBuilding = parent.getItemAtPosition(position).toString();
+                    Toast.makeText(parent.getContext(), selectedBuilding, Toast.LENGTH_SHORT).show();
+                    createFloorSpinner();
                 }
             }
 
@@ -137,6 +108,77 @@ public class LockerRegistration extends AppCompatActivity{
 
             }
         });
+    }
+
+    private void createFloorSpinner() {
+        spinnerFloor = findViewById(R.id.spinnerFloor);
+
+        ArrayList<String> floors = new ArrayList<>();
+        lockers.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + " => " + document.getData());
+                        Map<String, Object> map = document.getData();
+                        if (map.get("building").equals(selectedBuilding)) {
+                            String floor = map.get("floor").toString();
+                            if (!floors.contains(floor))
+                                floors.add(floor);
+                        }
+                    }
+                    Collections.sort(floors);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(LockerRegistration.this, android.R.layout.simple_spinner_item, floors);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerFloor.setAdapter(adapter);
+
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+        spinnerFloor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // I want this part to work if selectedFloor is an integer, but it doesn't and I don't know why
+                //selectedFloor = Integer.parseInt(parent.getItemAtPosition(position).toString());
+                selectedFloor = parent.getItemAtPosition(position).toString();
+                Toast.makeText(parent.getContext(), selectedFloor, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+
+    public void displayFloor(View view) {
+//        lockers.whereEqualTo("building", selectedBuilding)
+//                .whereEqualTo("floor", selectedFloor)
+//                .orderBy("number")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Log.d(TAG, document.getId() + " => " + document.getData());
+//                                //int lockerNumber = Integer.parseInt(document.getString("number"));
+//                                Map<String, Object> map = document.getData();
+//                                int lockerNumber = (int) map.get("number");
+//                                boolean reserved = (boolean) map.get("reserved");
+//                                String imgID = "img" + lockerNumber;
+//                                int rImgID = getResources().getIdentifier(imgID, "id", getPackageName());
+//                                ImageView img = findViewById(rImgID);
+//                            }
+//                        } else {
+//                            Log.d(TAG, "Error getting documents: ", task.getException());
+//                        }
+//                    }
+//                });
+
     }
 
 //    private void createSpinner(Spinner spinner, String fieldName) {
