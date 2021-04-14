@@ -35,7 +35,8 @@ public class LockerRegistration extends AppCompatActivity{
     CollectionReference lockers;
     Spinner spinnerBuilding;
     Spinner spinnerFloor;
-    TextView textView;
+    Button btnViewFloor;
+    ConstraintLayout lockerLayout;
     String selectedBuilding;
     String selectedFloor;
 
@@ -46,8 +47,8 @@ public class LockerRegistration extends AppCompatActivity{
 
         db = FirebaseFirestore.getInstance();
         lockers = db.collection("lockers");
-        textView = findViewById(R.id.textView);
-
+        btnViewFloor = findViewById(R.id.btnViewFloor);
+        lockerLayout = findViewById(R.id.lockerLayout);
         createBuildingSpinner();
         //createSpinner(spinnerBuilding, "building");
 
@@ -155,29 +156,35 @@ public class LockerRegistration extends AppCompatActivity{
 
 
     public void displayFloor(View view) {
-//        lockers.whereEqualTo("building", selectedBuilding)
-//                .whereEqualTo("floor", selectedFloor)
-//                .orderBy("number")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Log.d(TAG, document.getId() + " => " + document.getData());
-//                                //int lockerNumber = Integer.parseInt(document.getString("number"));
-//                                Map<String, Object> map = document.getData();
-//                                int lockerNumber = (int) map.get("number");
-//                                boolean reserved = (boolean) map.get("reserved");
-//                                String imgID = "img" + lockerNumber;
-//                                int rImgID = getResources().getIdentifier(imgID, "id", getPackageName());
-//                                ImageView img = findViewById(rImgID);
-//                            }
-//                        } else {
-//                            Log.d(TAG, "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
+        lockers.whereEqualTo("building", selectedBuilding)
+                .whereEqualTo("floor", Integer.parseInt(selectedFloor))
+                .orderBy("number")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            lockerLayout.setVisibility(View.VISIBLE);
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                //int lockerNumber = Integer.parseInt(document.getString("number"));
+                                Map<String, Object> map = document.getData();
+                                long lockerNumber = (long) map.get("number");
+                                boolean reserved = (boolean) map.get("reserved");
+                                String imgID = "img" + lockerNumber;
+                                int rImgID = getResources().getIdentifier(imgID, "id", getPackageName());
+                                ImageView img = findViewById(rImgID);
+                                if (reserved) {
+                                    img.setImageResource(R.drawable.ic_locked);
+                                } else {
+                                    img.setImageResource(R.drawable.ic_unlocked);
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
 
     }
 
