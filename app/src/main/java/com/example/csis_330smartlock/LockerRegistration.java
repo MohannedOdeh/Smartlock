@@ -1,6 +1,7 @@
 package com.example.csis_330smartlock;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -21,7 +22,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -39,6 +44,7 @@ public class LockerRegistration extends AppCompatActivity{
     ConstraintLayout lockerLayout;
     String selectedBuilding;
     String selectedFloor;
+    ListenerRegistration update;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +186,7 @@ public class LockerRegistration extends AppCompatActivity{
                                     img.setImageResource(R.drawable.ic_unlocked);
                                 }
                             }
+                            checkForChanges();
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
@@ -188,7 +195,56 @@ public class LockerRegistration extends AppCompatActivity{
 
     }
 
-//    private void createSpinner(Spinner spinner, String fieldName) {
+    private void checkForChanges() {
+        update = lockers.whereEqualTo("building", selectedBuilding)
+                .whereEqualTo("floor", Integer.parseInt(selectedFloor))
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "listen:error", e);
+                            return;
+                        }
+
+                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                            switch (dc.getType()) {
+                                case ADDED:
+                                    Log.d(TAG, "New locker: " + dc.getDocument().getData());
+                                    break;
+                                case MODIFIED:
+                                    Log.d(TAG, "Modified locker: " + dc.getDocument().getData());
+
+                                    Map<String, Object> map = dc.getDocument().getData();
+                                    long lockerNumber = (long) map.get("number");
+                                    boolean reserved = (boolean) map.get("reserved");
+                                    String imgID = "img" + lockerNumber;
+                                    int rImgID = getResources().getIdentifier(imgID, "id", getPackageName());
+                                    ImageView img = findViewById(rImgID);
+                                    if (reserved) {
+                                        img.setImageResource(R.drawable.ic_locked);
+                                    } else {
+                                        img.setImageResource(R.drawable.ic_unlocked);
+                                    }
+                                    break;
+                                case REMOVED:
+                                    Log.d(TAG, "Removed locker: " + dc.getDocument().getData());
+                                    break;
+                            }
+                        }
+
+                    }
+                });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (update != null)
+            update.remove();
+    }
+
+    //    private void createSpinner(Spinner spinner, String fieldName) {
 //        ArrayList<String> arrayList = new ArrayList<>();
 //        lockers.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 //            @Override
