@@ -146,7 +146,8 @@
             android:layout_marginLeft="15dp"
             android:src="@drawable/ic_locked"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:onClick="selectLocker"/>
 
         <ImageView
             android:id="@+id/img2"
@@ -154,7 +155,8 @@
             android:layout_height="50dp"
             android:src="@drawable/ic_locked"
             app:layout_constraintStart_toEndOf="@+id/img1"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:onClick="selectLocker"/>
 
         <ImageView
             android:id="@+id/img3"
@@ -162,7 +164,8 @@
             android:layout_height="50dp"
             android:src="@drawable/ic_locked"
             app:layout_constraintStart_toEndOf="@+id/img2"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:onClick="selectLocker" />
 
         <ImageView
             android:id="@+id/img4"
@@ -170,7 +173,8 @@
             android:layout_height="50dp"
             android:src="@drawable/ic_locked"
             app:layout_constraintEnd_toStartOf="@+id/img5"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:onClick="selectLocker" />
 
         <ImageView
             android:id="@+id/img5"
@@ -178,7 +182,8 @@
             android:layout_height="50dp"
             android:src="@drawable/ic_locked"
             app:layout_constraintEnd_toStartOf="@+id/img6"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:onClick="selectLocker" />
 
         <ImageView
             android:id="@+id/img6"
@@ -187,7 +192,8 @@
             android:layout_marginRight="15dp"
             android:src="@drawable/ic_locked"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:onClick="selectLocker" />
 
         <ImageView
             android:id="@+id/img7"
@@ -196,7 +202,8 @@
             android:layout_marginLeft="15dp"
             android:src="@drawable/ic_locked"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:onClick="selectLocker" />
 
         <ImageView
             android:id="@+id/img8"
@@ -204,7 +211,8 @@
             android:layout_height="50dp"
             android:src="@drawable/ic_locked"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/img7" />
+            app:layout_constraintStart_toEndOf="@+id/img7"
+            android:onClick="selectLocker" />
 
         <ImageView
             android:id="@+id/img9"
@@ -212,7 +220,8 @@
             android:layout_height="50dp"
             android:src="@drawable/ic_locked"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/img10" />
+            app:layout_constraintEnd_toStartOf="@+id/img10"
+            android:onClick="selectLocker" />
 
         <ImageView
             android:id="@+id/img10"
@@ -221,7 +230,8 @@
             android:layout_marginEnd="15dp"
             android:src="@drawable/ic_locked"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:onClick="selectLocker" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
@@ -234,6 +244,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerFloor"
         android:onClick="displayFloor"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConfirmLocker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Proceed to registration"
+        android:visibility="invisible"
+        android:onClick="confirmLocker"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lockerLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

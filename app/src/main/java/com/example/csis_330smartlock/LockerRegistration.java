@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
@@ -45,6 +47,8 @@ public class LockerRegistration extends AppCompatActivity{
     String selectedBuilding;
     String selectedFloor;
     ListenerRegistration update;
+    int selectedLocker;
+    Button btnConfirmLocker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,8 +186,10 @@ public class LockerRegistration extends AppCompatActivity{
                                 ImageView img = findViewById(rImgID);
                                 if (reserved) {
                                     img.setImageResource(R.drawable.ic_locked);
+                                    img.setClickable(false);
                                 } else {
                                     img.setImageResource(R.drawable.ic_unlocked);
+                                    img.setClickable(true);
                                 }
                             }
                             checkForChanges();
@@ -192,7 +198,6 @@ public class LockerRegistration extends AppCompatActivity{
                         }
                     }
                 });
-
     }
 
     private void checkForChanges() {
@@ -209,9 +214,6 @@ public class LockerRegistration extends AppCompatActivity{
 
                         for (DocumentChange dc : snapshots.getDocumentChanges()) {
                             switch (dc.getType()) {
-                                case ADDED:
-                                    Log.d(TAG, "New locker: " + dc.getDocument().getData());
-                                    break;
                                 case MODIFIED:
                                     Log.d(TAG, "Modified locker: " + dc.getDocument().getData());
 
@@ -223,9 +225,15 @@ public class LockerRegistration extends AppCompatActivity{
                                     ImageView img = findViewById(rImgID);
                                     if (reserved) {
                                         img.setImageResource(R.drawable.ic_locked);
+                                        img.setClickable(false);
+                                        img.setBackgroundResource(0);
                                     } else {
                                         img.setImageResource(R.drawable.ic_unlocked);
+                                        img.setClickable(true);
                                     }
+                                    break;
+                                case ADDED:
+                                    Log.d(TAG, "Locker: " + dc.getDocument().getData());
                                     break;
                                 case REMOVED:
                                     Log.d(TAG, "Removed locker: " + dc.getDocument().getData());
@@ -237,9 +245,77 @@ public class LockerRegistration extends AppCompatActivity{
                 });
     }
 
+    public void selectLocker(View view) {
+        //Remove border from every image
+        ConstraintLayout lockerLayout = findViewById(R.id.lockerLayout);
+        for (int i = 0; i < lockerLayout.getChildCount(); i++) {
+            View v = lockerLayout.getChildAt(i);
+            if (v instanceof ImageView) {
+                v.setBackgroundResource(0);
+            } else {
+                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+            }
+        }
+        // android:background="@drawable/image_border"
+
+        view.setBackgroundResource(R.drawable.image_border);
+        btnConfirmLocker = findViewById(R.id.btnConfirmLocker);
+        btnConfirmLocker.setVisibility(View.VISIBLE);
+
+        // Get the ID of the corresponding locker, then replace the variable with just the locker number
+        String imgID = view.getResources().getResourceName(view.getId());
+        imgID = imgID.replaceFirst(".*?(\\d+$)", "$1");
+        selectedLocker = Integer.parseInt(imgID);
+        Log.d(TAG, imgID);
+
+
+    }
+
+    public void confirmLocker(View view) {
+        // Searches for the locker with the selected building, floor, and locker number then sets
+        // the reservation status to false
+
+        //Query to search for the locker
+        lockers.whereEqualTo("building", selectedBuilding)
+                .whereEqualTo("floor", Integer.parseInt(selectedFloor))
+                .whereEqualTo("number", selectedLocker)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty())
+                                Log.d(TAG, "No results found");
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                //Update the reservation status
+                                lockers.document(document.getId())
+                                        .update("reserved", true)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error updating document", e);
+                                            }
+                                        });
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
+        // Quit the realtime updater if the activity ends
         if (update != null)
             update.remove();
     }
