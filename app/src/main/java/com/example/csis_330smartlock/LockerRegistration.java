@@ -60,13 +60,6 @@ public class LockerRegistration extends AppCompatActivity{
         btnViewFloor = findViewById(R.id.btnViewFloor);
         lockerLayout = findViewById(R.id.lockerLayout);
         createBuildingSpinner();
-        //createSpinner(spinnerBuilding, "building");
-
-//        spinnerFloor = findViewById(R.id.spinnerFloor);
-//        createSpinner(spinnerFloor, "floor");
-
-        //        ArrayAdapter.createFromResource(this, buildingNames, android.R.layout.simple_spinner_item);
-
     }
 
     private void createBuildingSpinner() {
@@ -106,7 +99,6 @@ public class LockerRegistration extends AppCompatActivity{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
-                    //textView.setText("Hellooo");
                     //if (parent.getId()==R.id.spinnerBuilding) {
                     selectedBuilding = parent.getItemAtPosition(position).toString();
                     Toast.makeText(parent.getContext(), selectedBuilding, Toast.LENGTH_SHORT).show();
@@ -143,6 +135,7 @@ public class LockerRegistration extends AppCompatActivity{
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerFloor.setAdapter(adapter);
 
+                    btnViewFloor.setVisibility(View.VISIBLE);
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
@@ -256,8 +249,8 @@ public class LockerRegistration extends AppCompatActivity{
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
             }
         }
-        // android:background="@drawable/image_border"
 
+        // Sets a border for the selected image
         view.setBackgroundResource(R.drawable.image_border);
         btnConfirmLocker = findViewById(R.id.btnConfirmLocker);
         btnConfirmLocker.setVisibility(View.VISIBLE);

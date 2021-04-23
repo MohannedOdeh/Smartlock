@@ -48,86 +48,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtFloor" />
 
-<!--    <TableLayout-->
-<!--        android:id="@+id/tableLayout"-->
-<!--        android:layout_width="351dp"-->
-<!--        android:layout_height="71dp"-->
-<!--        android:layout_marginTop="56dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/spinnerFloor">-->
-
-<!--        <TableRow-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/img1"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:src="@drawable/ic_locked" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/img2"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:src="@drawable/ic_locked" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/img3"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:src="@drawable/ic_locked" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/img4"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:src="@drawable/ic_locked" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/img5"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:src="@drawable/ic_locked" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/img6"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:src="@drawable/ic_locked" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/img7"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:src="@drawable/ic_locked" />-->
-<!--        </TableRow>-->
-
-<!--        <TableRow-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="53dp">-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/img8"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:src="@drawable/ic_locked" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/img9"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:src="@drawable/ic_locked" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/img10"-->
-<!--                android:layout_width="42dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:src="@drawable/ic_locked" />-->
-<!--        </TableRow>-->
-<!--    </TableLayout>-->
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/lockerLayout"
         android:layout_width="360dp"
@@ -240,6 +160,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:text="Show Floor"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerFloor"
