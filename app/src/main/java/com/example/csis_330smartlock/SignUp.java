@@ -147,9 +147,11 @@ public class SignUp extends AppCompatActivity {
         String fn = firstName.getText().toString();
         String ln = lastName.getText().toString();
         String userEmail = email.getText().toString();
+        double balance = 0;
         user.put("First Name", fn);
         user.put("Last Name", ln);
         user.put("Email", userEmail);
+        user.put("Current balance", balance);
         users.document(userid).set(user);
     }
 
