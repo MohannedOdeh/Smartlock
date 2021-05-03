@@ -53,4 +53,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LockerRegistration.class);
         startActivity(intent);
     }
+
+    public void toPayment (View view){
+        Intent intent = new Intent(this, Payment.class);
+        startActivity(intent);
+    }
 }
