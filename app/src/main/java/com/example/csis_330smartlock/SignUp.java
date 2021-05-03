@@ -141,14 +141,16 @@ public class SignUp extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference users = db.collection("users");
         Map<String, Object> user = new HashMap<>();
-
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String userid = currentUser.getUid();
         // Write first and last name into Firestore database
         String fn = firstName.getText().toString();
         String ln = lastName.getText().toString();
         String userEmail = email.getText().toString();
         user.put("First Name", fn);
         user.put("Last Name", ln);
-        users.document(userEmail).set(user);
+        user.put("Email", userEmail);
+        users.document(userid).set(user);
     }
 
     private void updateUI(FirebaseUser user) {

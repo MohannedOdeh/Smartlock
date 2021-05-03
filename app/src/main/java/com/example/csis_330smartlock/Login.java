@@ -107,7 +107,7 @@ public class Login extends AppCompatActivity {
 
     private void reload() {
         // Go to main menu
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), Payment.class);
         startActivity(intent);
         finish();
     }
