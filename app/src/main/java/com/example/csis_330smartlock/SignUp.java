@@ -148,10 +148,12 @@ public class SignUp extends AppCompatActivity {
         String ln = lastName.getText().toString();
         String userEmail = email.getText().toString();
         double balance = 0;
+        String reservedLocker = "None";
         user.put("First Name", fn);
         user.put("Last Name", ln);
         user.put("Email", userEmail);
         user.put("Current balance", balance);
+        user.put("Reserved Locker", reservedLocker);
         users.document(userid).set(user);
     }
 

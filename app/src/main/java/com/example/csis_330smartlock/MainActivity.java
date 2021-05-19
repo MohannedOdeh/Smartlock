@@ -58,4 +58,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, Payment.class);
         startActivity(intent);
     }
+
+    public void toUserProfile (View view){
+        Intent intent = new Intent(this, userprofile.class);
+        startActivity(intent);
+    }
 }
