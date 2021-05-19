@@ -23,8 +23,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -38,8 +41,12 @@ import java.util.Map;
 
 public class LockerRegistration extends AppCompatActivity{
     private static final String TAG = "LockerRegistration";
+    //FirebaseAuth mAuth;
     FirebaseFirestore db;
     CollectionReference lockers;
+    CollectionReference users;
+//    FirebaseUser currentUser;
+//    String userid;
     Spinner spinnerBuilding;
     Spinner spinnerFloor;
     Button btnViewFloor;
@@ -57,6 +64,11 @@ public class LockerRegistration extends AppCompatActivity{
 
         db = FirebaseFirestore.getInstance();
         lockers = db.collection("lockers");
+        users = db.collection("users");
+//        mAuth = FirebaseAuth.getInstance();
+//        currentUser = mAuth.getCurrentUser();
+//        userid = currentUser.getUid();
+
         btnViewFloor = findViewById(R.id.btnViewFloor);
         lockerLayout = findViewById(R.id.lockerLayout);
         createBuildingSpinner();
@@ -285,6 +297,41 @@ public class LockerRegistration extends AppCompatActivity{
                                 //Update the reservation status
                                 lockers.document(document.getId())
                                         .update("reserved", true)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error updating document", e);
+                                            }
+                                        });
+
+                                //Update the user's profile
+//                                users.document(document.getId())
+//                                        .update("reserved", true)
+//                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                            @Override
+//                                            public void onSuccess(Void aVoid) {
+//                                                Log.d(TAG, "DocumentSnapshot successfully updated!");
+//                                            }
+//                                        })
+//                                        .addOnFailureListener(new OnFailureListener() {
+//                                            @Override
+//                                            public void onFailure(@NonNull Exception e) {
+//                                                Log.w(TAG, "Error updating document", e);
+//                                            }
+//                                        });
+
+                                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                                FirebaseUser currentUser = mAuth.getCurrentUser();
+                                String userid = currentUser.getUid();
+                                DocumentReference userDocRef = db.collection("users").document(userid);
+                                String lockerID = "B"+selectedBuilding+"F"+selectedFloor+"N"+selectedLocker;
+                                userDocRef.update("Reserved Locker", lockerID)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
