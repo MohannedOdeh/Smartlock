@@ -35,16 +35,17 @@ public class userprofile extends AppCompatActivity {
     TextView userLastName;
     TextView useremail;
     TextView usercurrentBalance;
-
+    TextView reservedLocker;
+    String locker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userprofile);
-
+        reservedLocker = findViewById(R.id.reservedLocker);
         userFirstName = findViewById(R.id.userFirstName);
         userLastName = findViewById(R.id.userLastname);
         useremail = findViewById(R.id.userEmail);
-        usercurrentBalance = findViewById(R.id.userCurrentBalance);
+        usercurrentBalance = findViewById(R.id.userCurrentBalance2);
         DocumentReference docRef = db.collection("users").document(userid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -57,11 +58,14 @@ public class userprofile extends AppCompatActivity {
                         lastName = document.getString("Last Name");
                         currentBalance = document.getDouble("Current balance");
                         email = document.getString("Email");
+                        locker = document.getString("Reserved Locker");
                         userFirstName.setText(firstName);
                         userLastName.setText(lastName);
                         useremail.setText(email);
+                        reservedLocker.setText(locker);
                         String balance = Double.toString(currentBalance);
                         usercurrentBalance.setText(balance);
+
                     } else {
                         Log.d(TAG, "No such document");
                     }

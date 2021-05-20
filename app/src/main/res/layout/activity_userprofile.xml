@@ -7,23 +7,43 @@
     tools:context=".userprofile">
 
     <TextView
-        android:id="@+id/userCurrentBalance"
+        android:id="@+id/currentBalancePrefix2"
+        android:layout_width="112dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="132dp"
+        android:text="Current Balance:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameprefix" />
+
+    <TextView
+        android:id="@+id/userCurrentBalance2"
+        android:layout_width="175dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="28dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/currentBalancePrefix2"
+        app:layout_constraintTop_toBottomOf="@+id/userEmail" />
+
+    <TextView
+        android:id="@+id/reservedLocker"
         android:layout_width="175dp"
         android:layout_height="35dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.576"
-        app:layout_constraintStart_toEndOf="@+id/currentBalancePrefix"
+        app:layout_constraintStart_toEndOf="@+id/reservedLockerPrefix"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.682" />
+        app:layout_constraintVertical_bias="0.793" />
 
     <TextView
-        android:id="@+id/currentBalancePrefix"
+        android:id="@+id/reservedLockerPrefix"
         android:layout_width="112dp"
         android:layout_height="31dp"
-        android:layout_marginTop="132dp"
-        android:text="Current Balance:"
+        android:layout_marginTop="212dp"
+        android:text="Reserved Locker:"
         app:layout_constraintEnd_toStartOf="@+id/userEmail"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
