@@ -52,4 +52,13 @@
         app:layout_constraintHorizontal_bias="0.944"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="326dp"
+        android:layout_height="281dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/smartlocklogo"
+        tools:layout_editor_absoluteY="34dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

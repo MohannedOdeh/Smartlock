@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -56,7 +58,11 @@ public class LockerRegistration extends AppCompatActivity{
     ListenerRegistration update;
     int selectedLocker;
     Button btnConfirmLocker;
-
+    double add;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = mAuth.getCurrentUser();
+    String userid = currentUser.getUid();
+    double minimum = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +77,30 @@ public class LockerRegistration extends AppCompatActivity{
 
         btnViewFloor = findViewById(R.id.btnViewFloor);
         lockerLayout = findViewById(R.id.lockerLayout);
+        DocumentReference docRef = db.collection("users").document(userid);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        testingMethod(document.getDouble("Current balance"));
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
         createBuildingSpinner();
+    }
+
+    public void testingMethod(double a)
+    {
+        add = a;
     }
 
     private void createBuildingSpinner() {
@@ -281,36 +310,39 @@ public class LockerRegistration extends AppCompatActivity{
         // the reservation status to false
 
         //Query to search for the locker
-        lockers.whereEqualTo("building", selectedBuilding)
-                .whereEqualTo("floor", Integer.parseInt(selectedFloor))
-                .whereEqualTo("number", selectedLocker)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().isEmpty())
-                                Log.d(TAG, "No results found");
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                //Update the reservation status
-                                lockers.document(document.getId())
-                                        .update("reserved", true)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Log.d(TAG, "DocumentSnapshot successfully updated!");
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w(TAG, "Error updating document", e);
-                                            }
-                                        });
 
-                                //Update the user's profile
+        if(Double.compare(add,minimum)==0 || Double.compare(add,minimum) > 0) {
+            lockers.whereEqualTo("building", selectedBuilding)
+                    .whereEqualTo("floor", Integer.parseInt(selectedFloor))
+                    .whereEqualTo("number", selectedLocker)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                if (task.getResult().isEmpty())
+                                    Log.d(TAG, "No results found");
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                    //Update the reservation status
+                                    lockers.document(document.getId())
+                                            .update("reserved", true)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w(TAG, "Error updating document", e);
+                                                }
+                                            });
+
+                                    //Update the user's profile
 //                                users.document(document.getId())
 //                                        .update("reserved", true)
 //                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -326,30 +358,36 @@ public class LockerRegistration extends AppCompatActivity{
 //                                            }
 //                                        });
 
-                                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                                FirebaseUser currentUser = mAuth.getCurrentUser();
-                                String userid = currentUser.getUid();
-                                DocumentReference userDocRef = db.collection("users").document(userid);
-                                String lockerID = "B"+selectedBuilding+"F"+selectedFloor+"N"+selectedLocker;
-                                userDocRef.update("Reserved Locker", lockerID)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Log.d(TAG, "DocumentSnapshot successfully updated!");
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w(TAG, "Error updating document", e);
-                                            }
-                                        });
+
+                                    DocumentReference userDocRef = db.collection("users").document(userid);
+                                    String lockerID = "B" + selectedBuilding + "F" + selectedFloor + "N" + selectedLocker;
+                                    userDocRef.update("Reserved Locker", lockerID)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w(TAG, "Error updating document", e);
+                                                }
+                                            });
+                                }
+                            } else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
                             }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
-                    }
-                });
+                    });
+        }
+        else{
+            CharSequence text = "Not enough funds. Please add some more";
+            Toast toast = Toast.makeText (this, text, Toast.LENGTH_LONG);
+            toast.show ();
+            Intent intent = new Intent(this, Payment.class);
+            startActivity(intent);
+        }
     }
 
     @Override
