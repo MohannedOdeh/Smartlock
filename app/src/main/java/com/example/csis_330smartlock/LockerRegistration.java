@@ -39,6 +39,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class LockerRegistration extends AppCompatActivity{
@@ -313,6 +314,12 @@ public class LockerRegistration extends AppCompatActivity{
 
 
         if(Double.compare(add,minimum)==0 || Double.compare(add,minimum) > 0) {
+            CollectionReference users = db.collection("users");
+            double finalprice=0;
+            finalprice = add-minimum;
+            Map<String, Object> user = new HashMap<>();
+            user.put("Current balance", finalprice);
+            users.document(userid).update(user);
             lockers.whereEqualTo("building", selectedBuilding)
                     .whereEqualTo("floor", Integer.parseInt(selectedFloor))
                     .whereEqualTo("number", selectedLocker)
