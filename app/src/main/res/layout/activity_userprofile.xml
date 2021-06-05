@@ -4,118 +4,108 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".userprofile">
+    tools:context=".UserProfile">
 
     <TextView
-        android:id="@+id/currentBalancePrefix2"
+        android:id="@+id/userFirstNameLabel"
         android:layout_width="112dp"
         android:layout_height="31dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="132dp"
-        android:text="Current Balance:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameprefix" />
-
-    <TextView
-        android:id="@+id/userCurrentBalance2"
-        android:layout_width="175dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="28dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/currentBalancePrefix2"
-        app:layout_constraintTop_toBottomOf="@+id/userEmail" />
-
-    <TextView
-        android:id="@+id/reservedLocker"
-        android:layout_width="175dp"
-        android:layout_height="35dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="232dp"
+        android:text="First Name:"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.576"
-        app:layout_constraintStart_toEndOf="@+id/reservedLockerPrefix"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.793" />
-
-    <TextView
-        android:id="@+id/reservedLockerPrefix"
-        android:layout_width="112dp"
-        android:layout_height="31dp"
-        android:layout_marginTop="212dp"
-        android:text="Reserved Locker:"
-        app:layout_constraintEnd_toStartOf="@+id/userEmail"
-        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintHorizontal_bias="0.153"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameprefix" />
-
-    <TextView
-        android:id="@+id/userEmailPrefix"
-        android:layout_width="112dp"
-        android:layout_height="31dp"
-        android:layout_marginTop="76dp"
-        android:text="Emaill:"
-        app:layout_constraintEnd_toStartOf="@+id/userEmail"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameprefix" />
-
-    <TextView
-        android:id="@+id/userEmail"
-        android:layout_width="175dp"
-        android:layout_height="35dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.86"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.584" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/userFirstName"
         android:layout_width="175dp"
         android:layout_height="35dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.86"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.42" />
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintStart_toEndOf="@+id/userFirstNameLabel"
+        app:layout_constraintTop_toTopOf="@+id/userFirstNameLabel" />
 
     <TextView
-        android:id="@+id/userLastname"
+        android:id="@+id/userLastNameLabel"
+        android:layout_width="112dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="28dp"
+        android:text="Last Name:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.153"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userFirstNameLabel" />
+
+    <TextView
+        android:id="@+id/userLastName"
         android:layout_width="175dp"
         android:layout_height="35dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.86"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintStart_toEndOf="@+id/userLastNameLabel"
+        app:layout_constraintTop_toBottomOf="@+id/userFirstNameLabel" />
 
     <TextView
-        android:id="@+id/usernameprefix"
+        android:id="@+id/userEmailLabel"
         android:layout_width="112dp"
         android:layout_height="31dp"
-        android:text="First Name:"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/userFirstName"
-        app:layout_constraintHorizontal_bias="0.505"
+        android:layout_marginTop="28dp"
+        android:text="Email:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.153"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.418" />
+        app:layout_constraintTop_toBottomOf="@+id/userLastNameLabel" />
 
     <TextView
-        android:id="@+id/userLastnameprefix"
+        android:id="@+id/userEmail"
+        android:layout_width="175dp"
+        android:layout_height="35dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/userEmailLabel"
+        app:layout_constraintTop_toTopOf="@+id/userEmailLabel" />
+
+    <TextView
+        android:id="@+id/userCurrentBalanceLabel"
         android:layout_width="112dp"
         android:layout_height="31dp"
+        android:layout_marginTop="28dp"
+        android:text="Current Balance:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.153"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userEmailLabel" />
+
+    <TextView
+        android:id="@+id/userCurrentBalance"
+        android:layout_width="175dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="24dp"
-        android:text="Last Name:"
-        app:layout_constraintEnd_toStartOf="@+id/userLastname"
-        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toEndOf="@+id/userCurrentBalanceLabel"
+        app:layout_constraintTop_toBottomOf="@+id/userEmail" />
+
+    <TextView
+        android:id="@+id/reservedLockerLabel"
+        android:layout_width="112dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="28dp"
+        android:text="Reserved Locker:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.153"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameprefix" />
+        app:layout_constraintTop_toBottomOf="@+id/userCurrentBalanceLabel" />
+
+    <TextView
+        android:id="@+id/reservedLocker"
+        android:layout_width="175dp"
+        android:layout_height="35dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.461"
+        app:layout_constraintStart_toEndOf="@+id/reservedLockerLabel"
+        app:layout_constraintTop_toTopOf="@+id/reservedLockerLabel" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

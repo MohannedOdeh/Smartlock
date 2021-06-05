@@ -19,33 +19,39 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class userprofile extends AppCompatActivity {
+public class UserProfile extends AppCompatActivity {
+    // Initialize Firebase variables
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     String userid = currentUser.getUid();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference users = db.collection("users");
-    Map<String, Object> user = new HashMap<>();
-    public static final String TAG = "YOUR-TAG-NAME";
+
+//    CollectionReference users = db.collection("users");
+//    Map<String, Object> user = new HashMap<>();
+    public static final String TAG = "UserProfile";
+
     String firstName;
     String lastName;
     String email;
     double currentBalance;
     TextView userFirstName;
     TextView userLastName;
-    TextView useremail;
-    TextView usercurrentBalance;
+    TextView userEmail;
+    TextView userCurrentBalance;
     TextView reservedLocker;
     String locker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userprofile);
+
         reservedLocker = findViewById(R.id.reservedLocker);
         userFirstName = findViewById(R.id.userFirstName);
-        userLastName = findViewById(R.id.userLastname);
-        useremail = findViewById(R.id.userEmail);
-        usercurrentBalance = findViewById(R.id.userCurrentBalance2);
+        userLastName = findViewById(R.id.userLastName);
+        userEmail = findViewById(R.id.userEmail);
+        userCurrentBalance = findViewById(R.id.userCurrentBalance);
+
+        // Use the current user's id to retrieve their profile information from the database
         DocumentReference docRef = db.collection("users").document(userid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -61,10 +67,10 @@ public class userprofile extends AppCompatActivity {
                         locker = document.getString("Reserved Locker");
                         userFirstName.setText(firstName);
                         userLastName.setText(lastName);
-                        useremail.setText(email);
+                        userEmail.setText(email);
                         reservedLocker.setText(locker);
                         String balance = Double.toString(currentBalance);
-                        usercurrentBalance.setText(balance);
+                        userCurrentBalance.setText(balance);
 
                     } else {
                         Log.d(TAG, "No such document");
