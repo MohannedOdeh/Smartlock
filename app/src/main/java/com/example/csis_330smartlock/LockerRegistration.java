@@ -44,12 +44,9 @@ import java.util.Map;
 
 public class LockerRegistration extends AppCompatActivity{
     private static final String TAG = "LockerRegistration";
-    //FirebaseAuth mAuth;
-    FirebaseFirestore db;
+
     CollectionReference lockers;
     CollectionReference users;
-//    FirebaseUser currentUser;
-//    String userid;
     Spinner spinnerBuilding;
     Spinner spinnerFloor;
     Button btnViewFloor;
@@ -60,26 +57,29 @@ public class LockerRegistration extends AppCompatActivity{
     int selectedLocker;
     Button btnConfirmLocker;
     double add;
+
+    // Initialize Firebase variables
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     String userid = currentUser.getUid();
+    DocumentReference userDocRef = db.collection("users").document(userid);
     double minimum = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locker_registration);
 
-        db = FirebaseFirestore.getInstance();
         lockers = db.collection("lockers");
         users = db.collection("users");
-//        mAuth = FirebaseAuth.getInstance();
-//        currentUser = mAuth.getCurrentUser();
-//        userid = currentUser.getUid();
 
         btnViewFloor = findViewById(R.id.btnViewFloor);
+        // Loop through the buttons on the screen and set them to reserved or available
+        // depending on the information in the database
         lockerLayout = findViewById(R.id.lockerLayout);
-        DocumentReference docRef = db.collection("users").document(userid);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+        // Get the balance of the user and store in a variable
+        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -105,9 +105,15 @@ public class LockerRegistration extends AppCompatActivity{
     }
 
     private void createBuildingSpinner() {
+        // Function to create a spinner that displays the available buildings
+
         spinnerBuilding = findViewById(R.id.spinnerBuilding);
         ArrayList<String> buildings = new ArrayList<>();
+        // Add a '-' as the first item so nothing in the spinner is selected
         buildings.add("-");
+
+        // Get locker information from the database and populate the spinner
+        // with the buildings
         lockers.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -115,19 +121,22 @@ public class LockerRegistration extends AppCompatActivity{
                     // Loop through all entries in "lockers" collection
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
-                        Map<String, Object> map = document.getData();
+
 //                        for(Map.Entry<String, Object> entry : map.entrySet()) {
 //                            buildingNames.add(entry.getKey());
 //                        }
+
+                        // Create a Map object with the locker information
+                        // and add the unique buildings to an ArrayList
+                        Map<String, Object> map = document.getData();
                         String building = map.get("building").toString();
-                        // Add the building name to ArrayList only if it doesn't already exist in it
                         if(!buildings.contains(building)) {
                             buildings.add(building);
                         }
-                        Collections.sort(buildings);
                     }
 
                     // Create a spinner using the Array List
+                    Collections.sort(buildings);
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(LockerRegistration.this, android.R.layout.simple_spinner_item, buildings);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerBuilding.setAdapter(adapter);
@@ -137,6 +146,8 @@ public class LockerRegistration extends AppCompatActivity{
             }
         });
 
+        // Store the selected building in a variable
+        // When a building is selected, another spinner for the floors is created
         spinnerBuilding.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -156,15 +167,22 @@ public class LockerRegistration extends AppCompatActivity{
     }
 
     private void createFloorSpinner() {
-        spinnerFloor = findViewById(R.id.spinnerFloor);
+        // Function to create a spinner that displays the available floors
 
+        spinnerFloor = findViewById(R.id.spinnerFloor);
         ArrayList<String> floors = new ArrayList<>();
+
+        // Get locker information from the database and populate the spinner
+        // with the floors
         lockers.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    // Loop through all entries in "lockers" collection
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
+                        // Create a Map object with the locker information
+                        // and add the unique floors to an ArrayList
                         Map<String, Object> map = document.getData();
                         if (map.get("building").equals(selectedBuilding)) {
                             String floor = map.get("floor").toString();
@@ -177,12 +195,15 @@ public class LockerRegistration extends AppCompatActivity{
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerFloor.setAdapter(adapter);
 
+                    // Show the buttons to select the lockers
                     btnViewFloor.setVisibility(View.VISIBLE);
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
         });
+
+        // Store the selected floor in a variable
         spinnerFloor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -209,23 +230,34 @@ public class LockerRegistration extends AppCompatActivity{
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            // Show the layout of the lockers on-screen
                             lockerLayout.setVisibility(View.VISIBLE);
+
+                            // Loop through the result and set the color of the images to
+                            // the correct reservation status
+                            // Available lockers are green and reserved lockers are red
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 //int lockerNumber = Integer.parseInt(document.getString("number"));
+
+                                // Create a Map object with the locker's number and reservation status
                                 Map<String, Object> map = document.getData();
-                                long lockerNumber = (long) map.get("number");
-                                boolean reserved = (boolean) map.get("reserved");
-                                String imgID = "img" + lockerNumber;
-                                int rImgID = getResources().getIdentifier(imgID, "id", getPackageName());
-                                ImageView img = findViewById(rImgID);
-                                if (reserved) {
-                                    img.setImageResource(R.drawable.ic_locked);
-                                    img.setClickable(false);
-                                } else {
-                                    img.setImageResource(R.drawable.ic_unlocked);
-                                    img.setClickable(true);
-                                }
+
+                                setLockerColor(map);
+//                                long lockerNumber = (long) map.get("number");
+//                                boolean reserved = (boolean) map.get("reserved");
+//
+//                                // Search for the image with the same number and set its color
+//                                String imgID = "img" + lockerNumber;
+//                                int rImgID = getResources().getIdentifier(imgID, "id", getPackageName());
+//                                ImageView img = findViewById(rImgID);
+//                                if (reserved) {
+//                                    img.setImageResource(R.drawable.ic_locked);
+//                                    img.setClickable(false);
+//                                } else {
+//                                    img.setImageResource(R.drawable.ic_unlocked);
+//                                    img.setClickable(true);
+//                                }
                             }
                             checkForChanges();
                         } else {
@@ -236,6 +268,9 @@ public class LockerRegistration extends AppCompatActivity{
     }
 
     private void checkForChanges() {
+        // If the database is changed, update the images on-screen with the
+        // correct reservation status
+
         update = lockers.whereEqualTo("building", selectedBuilding)
                 .whereEqualTo("floor", Integer.parseInt(selectedFloor))
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -252,20 +287,25 @@ public class LockerRegistration extends AppCompatActivity{
                                 case MODIFIED:
                                     Log.d(TAG, "Modified locker: " + dc.getDocument().getData());
 
+                                    // Get the locker number and reservation status of the modified locker
                                     Map<String, Object> map = dc.getDocument().getData();
-                                    long lockerNumber = (long) map.get("number");
-                                    boolean reserved = (boolean) map.get("reserved");
-                                    String imgID = "img" + lockerNumber;
-                                    int rImgID = getResources().getIdentifier(imgID, "id", getPackageName());
-                                    ImageView img = findViewById(rImgID);
-                                    if (reserved) {
-                                        img.setImageResource(R.drawable.ic_locked);
-                                        img.setClickable(false);
-                                        img.setBackgroundResource(0);
-                                    } else {
-                                        img.setImageResource(R.drawable.ic_unlocked);
-                                        img.setClickable(true);
-                                    }
+
+                                    setLockerColor(map);
+//                                    long lockerNumber = (long) map.get("number");
+//                                    boolean reserved = (boolean) map.get("reserved");
+//
+//                                    // Search for the image with the corresponding number and change its status
+//                                    String imgID = "img" + lockerNumber;
+//                                    int rImgID = getResources().getIdentifier(imgID, "id", getPackageName());
+//                                    ImageView img = findViewById(rImgID);
+//                                    if (reserved) {
+//                                        img.setImageResource(R.drawable.ic_locked);
+//                                        img.setClickable(false);
+//                                        img.setBackgroundResource(0);
+//                                    } else {
+//                                        img.setImageResource(R.drawable.ic_unlocked);
+//                                        img.setClickable(true);
+//                                    }
                                     break;
                                 case ADDED:
                                     Log.d(TAG, "Locker: " + dc.getDocument().getData());
@@ -281,6 +321,9 @@ public class LockerRegistration extends AppCompatActivity{
     }
 
     public void selectLocker(View view) {
+        // Creates a border around the selected locker image and sets the
+        // selectedLocker variable to this locker
+
         //Remove border from every image
         ConstraintLayout lockerLayout = findViewById(R.id.lockerLayout);
         for (int i = 0; i < lockerLayout.getChildCount(); i++) {
@@ -302,17 +345,32 @@ public class LockerRegistration extends AppCompatActivity{
         imgID = imgID.replaceFirst(".*?(\\d+$)", "$1");
         selectedLocker = Integer.parseInt(imgID);
         Log.d(TAG, imgID);
+    }
 
+    public void setLockerColor(Map map) {
+        long lockerNumber = (long) map.get("number");
+        boolean reserved = (boolean) map.get("reserved");
 
+        // Search for the image with the same number and set its color
+        String imgID = "img" + lockerNumber;
+        int rImgID = getResources().getIdentifier(imgID, "id", getPackageName());
+        ImageView img = findViewById(rImgID);
+        if (reserved) {
+            img.setImageResource(R.drawable.ic_locked);
+            img.setClickable(false);
+            img.setBackgroundResource(0);
+        } else {
+            img.setImageResource(R.drawable.ic_unlocked);
+            img.setClickable(true);
+        }
     }
 
     public void confirmLocker(View view) {
         // Searches for the locker with the selected building, floor, and locker number then sets
         // the reservation status to false
 
-        //Query to search for the locker
-
-
+        // Check if the user's balance is above the minimum
+        // If so, deduct the reservation price from their balance and update the database
         if(Double.compare(add,minimum)==0 || Double.compare(add,minimum) > 0) {
             CollectionReference users = db.collection("users");
             double finalprice=0;
@@ -320,6 +378,8 @@ public class LockerRegistration extends AppCompatActivity{
             Map<String, Object> user = new HashMap<>();
             user.put("Current balance", finalprice);
             users.document(userid).update(user);
+
+            // Query to search for the locker so that it can be updated
             lockers.whereEqualTo("building", selectedBuilding)
                     .whereEqualTo("floor", Integer.parseInt(selectedFloor))
                     .whereEqualTo("number", selectedLocker)
@@ -333,7 +393,7 @@ public class LockerRegistration extends AppCompatActivity{
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                    //Update the reservation status
+                                    //Update the reservation status of the locker
                                     lockers.document(document.getId())
                                             .update("reserved", true)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -366,7 +426,7 @@ public class LockerRegistration extends AppCompatActivity{
 //                                        });
 
 
-                                    DocumentReference userDocRef = db.collection("users").document(userid);
+                                    // Update the "Reserved Locker" field in the user's profile
                                     String lockerID = "B" + selectedBuilding + "F" + selectedFloor + "N" + selectedLocker;
                                     userDocRef.update("Reserved Locker", lockerID)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -404,75 +464,4 @@ public class LockerRegistration extends AppCompatActivity{
         if (update != null)
             update.remove();
     }
-
-    //    private void createSpinner(Spinner spinner, String fieldName) {
-//        ArrayList<String> arrayList = new ArrayList<>();
-//        lockers.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if(task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        Log.d(TAG, document.getId() + " => " + document.getData());
-//                        Map<String, Object> map = document.getData();
-////                        for(Map.Entry<String, Object> entry : map.entrySet()) {
-////                            buildingNames.add(entry.getKey());
-////                        }
-//                        String fieldValue = map.get(fieldName).toString();
-//                        if(!arrayList.contains(fieldValue))
-//                            arrayList.add(fieldValue);
-//                        Collections.sort(arrayList);
-//                    }
-//                } else {
-//                    Log.d(TAG, "Error getting documents: ", task.getException());
-//                }
-//            }
-//        });
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayList);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinner.setAdapter(adapter);
-//        spinner.setOnItemSelectedListener(this);
-//    }
-
-//    @Override
-//    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//        textView.setText("Hellooo");
-//        //if (parent.getId()==R.id.spinnerBuilding) {
-//            String building = parent.getItemAtPosition(position).toString();
-//            Toast.makeText(parent.getContext(), building, Toast.LENGTH_SHORT).show();
-//
-//            spinnerFloor = findViewById(R.id.spinnerFloor);
-//            ArrayList<String> floors = new ArrayList<>();
-//            lockers.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                    if (task.isSuccessful()) {
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            Log.d(TAG, document.getId() + " => " + document.getData());
-//                            Map<String, Object> map = document.getData();
-////                        for(Map.Entry<String, Object> entry : map.entrySet()) {
-////                            buildingNames.add(entry.getKey());
-////                        }
-//                            if (map.get("building").equals(building)) {
-//                                String floor = map.get("floor").toString();
-//                                if (!floors.contains(floor))
-//                                    floors.add(floor);
-//                            }
-//                        }
-//                        Collections.sort(floors);
-//                    } else {
-//                        Log.d(TAG, "Error getting documents: ", task.getException());
-//                    }
-//                }
-//            });
-//            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, floors);
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            spinnerFloor.setAdapter(adapter);
-//            spinnerFloor.setOnItemSelectedListener(this);
-//        //}
-//    }
-//
-//    @Override
-//    public void onNothingSelected(AdapterView<?> parent) {
-//
-//    }
 }
