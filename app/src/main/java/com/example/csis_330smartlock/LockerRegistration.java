@@ -44,9 +44,6 @@ import java.util.Map;
 
 public class LockerRegistration extends AppCompatActivity{
     private static final String TAG = "LockerRegistration";
-
-    CollectionReference lockers;
-    CollectionReference users;
     Spinner spinnerBuilding;
     Spinner spinnerFloor;
     Button btnViewFloor;
@@ -64,14 +61,15 @@ public class LockerRegistration extends AppCompatActivity{
     FirebaseUser currentUser = mAuth.getCurrentUser();
     String userid = currentUser.getUid();
     DocumentReference userDocRef = db.collection("users").document(userid);
+
+    CollectionReference lockers = db.collection("lockers");
+    CollectionReference users = db.collection("users");
     double minimum = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locker_registration);
-
-        lockers = db.collection("lockers");
-        users = db.collection("users");
 
         btnViewFloor = findViewById(R.id.btnViewFloor);
         // Loop through the buttons on the screen and set them to reserved or available
@@ -426,9 +424,9 @@ public class LockerRegistration extends AppCompatActivity{
 //                                        });
 
 
-                                    // Update the "Reserved Locker" field in the user's profile
-                                    String lockerID = "B" + selectedBuilding + "F" + selectedFloor + "N" + selectedLocker;
-                                    userDocRef.update("Reserved Locker", lockerID)
+                                    // Update the "Reserved Locker" field in the user's profile with
+                                    // the locker ID
+                                    userDocRef.update("Reserved Locker", document.getId())
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
@@ -441,6 +439,10 @@ public class LockerRegistration extends AppCompatActivity{
                                                     Log.w(TAG, "Error updating document", e);
                                                 }
                                             });
+
+                                    Toast.makeText(LockerRegistration.this, "Registration successful", Toast.LENGTH_SHORT)
+                                            .show();
+                                    finish();
                                 }
                             } else {
                                 Log.d(TAG, "Error getting documents: ", task.getException());
