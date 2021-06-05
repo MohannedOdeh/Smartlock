@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CSIS330SmartLock"
         android:usesCleartextTraffic="true">
-        <activity android:name=".userprofile"></activity>
+        <activity android:name=".UserProfile" />
         <activity android:name=".ConfirmationActivity" />
         <activity android:name=".Payment" />
         <activity android:name=".LockerRegistration" />
