@@ -9,53 +9,75 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Payment">
 
+    <TextView
+        android:id="@+id/paymentTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="160dp"
+        android:text="Payment Information"
+        android:textSize="26sp" />
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_below="@+id/paymentTitle"
+        android:layout_marginTop="40dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_centerHorizontal="true">
 
-        <TableRow>
+        <TableRow
+            android:layout_marginRight="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Payment Amount : " />
+                android:text="Amount : "
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/paymentAmount"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:layout_height="wrap_content" />
+                android:textSize="20sp"/>
         </TableRow>
 
-        <TableRow>
+        <TableRow
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Status : " />
+                android:text="Status : "
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/paymentStatus"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:layout_height="wrap_content" />
+                android:textSize="20sp"/>
         </TableRow>
 
-        <TableRow>
+        <TableRow
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Payment Id : " />
+                android:text="Payment Id : "
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/paymentId"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:textSize="20sp" />
         </TableRow>
 
 

@@ -7,15 +7,26 @@
     tools:context=".UserProfile">
 
     <TextView
+        android:id="@+id/profileTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="160dp"
+        android:text="Profile"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/userFirstNameLabel"
         android:layout_width="112dp"
         android:layout_height="31dp"
-        android:layout_marginTop="232dp"
+        android:layout_marginTop="36dp"
         android:text="First Name:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.153"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/profileTitle" />
 
     <TextView
         android:id="@+id/userFirstName"
@@ -30,7 +41,7 @@
         android:id="@+id/userLastNameLabel"
         android:layout_width="112dp"
         android:layout_height="31dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="20dp"
         android:text="Last Name:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.153"
@@ -41,17 +52,16 @@
         android:id="@+id/userLastName"
         android:layout_width="175dp"
         android:layout_height="35dp"
-        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toEndOf="@+id/userLastNameLabel"
-        app:layout_constraintTop_toBottomOf="@+id/userFirstNameLabel" />
+        app:layout_constraintTop_toTopOf="@+id/userLastNameLabel" />
 
     <TextView
         android:id="@+id/userEmailLabel"
         android:layout_width="112dp"
         android:layout_height="31dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="20dp"
         android:text="Email:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.153"
@@ -70,7 +80,7 @@
         android:id="@+id/userCurrentBalanceLabel"
         android:layout_width="112dp"
         android:layout_height="31dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="20dp"
         android:text="Current Balance:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.153"
@@ -82,15 +92,14 @@
         android:layout_width="175dp"
         android:layout_height="35dp"
         android:layout_marginStart="36dp"
-        android:layout_marginTop="24dp"
         app:layout_constraintStart_toEndOf="@+id/userCurrentBalanceLabel"
-        app:layout_constraintTop_toBottomOf="@+id/userEmail" />
+        app:layout_constraintTop_toTopOf="@+id/userCurrentBalanceLabel" />
 
     <TextView
         android:id="@+id/reservedLockerLabel"
         android:layout_width="112dp"
         android:layout_height="31dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="20dp"
         android:text="Reserved Locker:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.153"
