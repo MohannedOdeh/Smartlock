@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     String lockerID;
+    ProgressBar progressBar;
     Button btnRegisterLocker;
     Button btnDeregisterLocker;
 
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        progressBar = findViewById(R.id.progressBar);
         btnRegisterLocker = findViewById(R.id.btnRegisterLocker);
         btnDeregisterLocker = findViewById(R.id.btnDeregisterLocker);
 
@@ -70,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
         // Use the current user's id to retrieve their profile information from the database
         // If the user has a locker registered, a button to deregister will be shown
 
+        // Show progress bar in place of buttons
+        progressBar.setVisibility(View.VISIBLE);
+        btnRegisterLocker.setVisibility(View.GONE);
+        btnDeregisterLocker.setVisibility(View.GONE);
+
         usersDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -80,10 +88,13 @@ public class MainActivity extends AppCompatActivity {
                         lockerID = document.getString("Reserved Locker");
                         // If there is no locker registered to the user, show the registration button
                         // Otherwise, show the deregistration button
+                        // Remove the progress bar before showing a button
                         if (lockerID.equals("None")) {
+                            progressBar.setVisibility(View.GONE);
                             btnRegisterLocker.setVisibility(View.VISIBLE);
                             btnDeregisterLocker.setVisibility(View.GONE);
                         } else {
+                            progressBar.setVisibility(View.GONE);
                             btnRegisterLocker.setVisibility(View.GONE);
                             btnDeregisterLocker.setVisibility(View.VISIBLE);
                             locker = lockers.document(lockerID);
