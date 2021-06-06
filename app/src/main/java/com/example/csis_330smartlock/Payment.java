@@ -153,7 +153,8 @@ public class Payment extends AppCompatActivity implements View.OnClickListener {
                         user.put("Current balance", finalprice);
                         users.document(userid).update(user);
 
-
+                        //End the activity
+                        finish();
                     } catch (JSONException e) {
                         Log.e("paymentExample", "an extremely unlikely failure occurred: ", e);
                     }
