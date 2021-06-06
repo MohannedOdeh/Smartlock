@@ -2,9 +2,11 @@ package com.example.csis_330smartlock;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,7 +55,6 @@ public class LockerRegistration extends AppCompatActivity{
     ListenerRegistration update;
     int selectedLocker;
     Button btnConfirmLocker;
-    double add;
 
     // Initialize Firebase variables
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -76,30 +77,7 @@ public class LockerRegistration extends AppCompatActivity{
         // depending on the information in the database
         lockerLayout = findViewById(R.id.lockerLayout);
 
-        // Get the balance of the user and store in a variable
-        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        testingMethod(document.getDouble("Current balance"));
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-
         createBuildingSpinner();
-    }
-
-    public void testingMethod(double a)
-    {
-        add = a;
     }
 
     private void createBuildingSpinner() {
@@ -367,97 +345,140 @@ public class LockerRegistration extends AppCompatActivity{
         // Searches for the locker with the selected building, floor, and locker number then sets
         // the reservation status to false
 
-        // Check if the user's balance is above the minimum
-        // If so, deduct the reservation price from their balance and update the database
-        if(Double.compare(add,minimum)==0 || Double.compare(add,minimum) > 0) {
-            CollectionReference users = db.collection("users");
-            double finalprice=0;
-            finalprice = add-minimum;
-            Map<String, Object> user = new HashMap<>();
-            user.put("Current balance", finalprice);
-            users.document(userid).update(user);
+        // Store the current balance of the user in a variable
+        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        Double balance = document.getDouble("Current balance");
 
-            // Query to search for the locker so that it can be updated
-            lockers.whereEqualTo("building", selectedBuilding)
-                    .whereEqualTo("floor", Integer.parseInt(selectedFloor))
-                    .whereEqualTo("number", selectedLocker)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                if (task.getResult().isEmpty())
-                                    Log.d(TAG, "No results found");
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                        // Check if the user's balance is above the minimum
+                        // If so, deduct the reservation price from their balance and update the database
+                        if(Double.compare(balance,minimum)==0 || Double.compare(balance,minimum) > 0) {
+                            CollectionReference users = db.collection("users");
+                            double finalprice=0;
+                            finalprice = balance-minimum;
+                            Map<String, Object> user = new HashMap<>();
+                            user.put("Current balance", finalprice);
+                            users.document(userid).update(user);
 
-                                    //Update the reservation status of the locker
-                                    lockers.document(document.getId())
-                                            .update("reserved", true)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Log.d(TAG, "DocumentSnapshot successfully updated!");
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.w(TAG, "Error updating document", e);
-                                                }
-                                            });
-
-                                    //Update the user's profile
-//                                users.document(document.getId())
-//                                        .update("reserved", true)
-//                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                            @Override
-//                                            public void onSuccess(Void aVoid) {
-//                                                Log.d(TAG, "DocumentSnapshot successfully updated!");
-//                                            }
-//                                        })
-//                                        .addOnFailureListener(new OnFailureListener() {
-//                                            @Override
-//                                            public void onFailure(@NonNull Exception e) {
-//                                                Log.w(TAG, "Error updating document", e);
-//                                            }
-//                                        });
-
-
-                                    // Update the "Reserved Locker" field in the user's profile with
-                                    // the locker ID
-                                    userDocRef.update("Reserved Locker", document.getId())
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Log.d(TAG, "DocumentSnapshot successfully updated!");
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.w(TAG, "Error updating document", e);
-                                                }
-                                            });
-
-                                    Toast.makeText(LockerRegistration.this, "Registration successful", Toast.LENGTH_SHORT)
-                                            .show();
-                                    finish();
-                                }
-                            } else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
-                            }
+                            // Update the database
+                            updateDatabase();
                         }
-                    });
-        }
-        else{
-            CharSequence text = "Not enough funds. Please add some more";
-            Toast toast = Toast.makeText (this, text, Toast.LENGTH_LONG);
-            toast.show ();
-            Intent intent = new Intent(this, Payment.class);
-            startActivity(intent);
-        }
+                        else{
+                            // Create an Alert Dialog to notify of insufficient funds
+                            AlertDialog.Builder builder = new AlertDialog.Builder(LockerRegistration.this);
+                            builder.setMessage("Insufficient funds in your account. Would you like to add more?");
+                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User clicked OK button
+                                    Intent intent = new Intent(LockerRegistration.this, Payment.class);
+                                    startActivity(intent);
+                                }
+                            });
+                            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled the dialog
+                                }
+                            });
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        }
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+
     }
+
+    private void updateDatabase() {
+        // Update the database information for the locker that is registered
+        // and the user who registers it
+
+        // Query to search for the locker so that it can be updated
+        lockers.whereEqualTo("building", selectedBuilding)
+                .whereEqualTo("floor", Integer.parseInt(selectedFloor))
+                .whereEqualTo("number", selectedLocker)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty())
+                                Log.d(TAG, "No results found");
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                //Update the reservation status of the locker
+                                lockers.document(document.getId())
+                                        .update("reserved", true)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error updating document", e);
+                                            }
+                                        });
+
+                                // Update the "Reserved Locker" field in the user's profile with
+                                // the locker ID
+                                userDocRef.update("Reserved Locker", document.getId())
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error updating document", e);
+                                            }
+                                        });
+
+                                Toast.makeText(LockerRegistration.this, "Registration successful", Toast.LENGTH_SHORT)
+                                        .show();
+                                finish();
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+//
+//    public void getBalance() {
+//        // Get the balance of the user and store in a variable
+//        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+//                        balance = document.getDouble("Current balance");
+//                    } else {
+//                        Log.d(TAG, "No such document");
+//                    }
+//                } else {
+//                    Log.d(TAG, "get failed with ", task.getException());
+//                }
+//            }
+//        });
+//    }
 
     @Override
     protected void onStop() {
