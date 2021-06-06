@@ -18,14 +18,13 @@
         app:srcCompat="@drawable/smartlocklogo" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnRegisterLocker"
+        android:id="@+id/toUserProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
-        android:onClick="toLockers"
-        android:text="Register Locker"
+        android:onClick="toUserProfile"
+        android:text="User Profile"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -38,15 +37,16 @@
         android:text="Payment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnRegisterLocker" />
+        app:layout_constraintTop_toBottomOf="@+id/toUserProfile" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/toUserProfile"
+        android:id="@+id/btnRegisterLocker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:onClick="toUserProfile"
-        android:text="User Profile"
+        android:onClick="toLockers"
+        android:text="Register Locker"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnPayment" />
@@ -61,7 +61,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toUserProfile" />
+        app:layout_constraintTop_toBottomOf="@+id/btnPayment" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogout"

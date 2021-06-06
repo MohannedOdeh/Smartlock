@@ -36,6 +36,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     String lockerID;
+    Button btnRegisterLocker;
     Button btnDeregisterLocker;
 
     // Initialize Firebase variables
@@ -53,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        btnRegisterLocker = findViewById(R.id.btnRegisterLocker);
+        btnDeregisterLocker = findViewById(R.id.btnDeregisterLocker);
 
         checkForLocker();
         checkForChanges();
@@ -74,8 +78,13 @@ public class MainActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         lockerID = document.getString("Reserved Locker");
-                        if (!lockerID.equals("None")) {
-                            btnDeregisterLocker = findViewById(R.id.btnDeregisterLocker);
+                        // If there is no locker registered to the user, show the registration button
+                        // Otherwise, show the deregistration button
+                        if (lockerID.equals("None")) {
+                            btnRegisterLocker.setVisibility(View.VISIBLE);
+                            btnDeregisterLocker.setVisibility(View.GONE);
+                        } else {
+                            btnRegisterLocker.setVisibility(View.GONE);
                             btnDeregisterLocker.setVisibility(View.VISIBLE);
                             locker = lockers.document(lockerID);
                         }
