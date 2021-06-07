@@ -9,6 +9,9 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * @author Mohanned Odeh
+ */
 public class ConfirmationActivity extends AppCompatActivity {
 
     @Override

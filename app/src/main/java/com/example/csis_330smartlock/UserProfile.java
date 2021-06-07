@@ -1,33 +1,29 @@
 package com.example.csis_330smartlock;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * @author David Liang, Mohanned Odeh
+ */
 public class UserProfile extends AppCompatActivity {
     // Initialize Firebase variables
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     String userid = currentUser.getUid();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-//    CollectionReference users = db.collection("users");
-//    Map<String, Object> user = new HashMap<>();
     public static final String TAG = "UserProfile";
 
     String firstName;
@@ -60,6 +56,8 @@ public class UserProfile extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
+                        // Set the profile details into fields on the screen
                         firstName = document.getString("First Name");
                         lastName = document.getString("Last Name");
                         currentBalance = document.getDouble("Current balance");
@@ -71,7 +69,6 @@ public class UserProfile extends AppCompatActivity {
                         reservedLocker.setText(locker);
                         String balance = Double.toString(currentBalance);
                         userCurrentBalance.setText(balance);
-
                     } else {
                         Log.d(TAG, "No such document");
                     }

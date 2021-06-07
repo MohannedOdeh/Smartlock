@@ -1,12 +1,7 @@
 package com.example.csis_330smartlock;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -15,15 +10,20 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import com.google.android.material.button.MaterialButton;
-import com.vishnusivadas.advanced_httpurlconnection.PutData;
-
+/**
+ * @author David Liang, Mohanned Odeh
+ */
 public class Login extends AppCompatActivity {
 
     EditText email;
@@ -45,14 +45,21 @@ public class Login extends AppCompatActivity {
         txtSignUp = findViewById(R.id.txtSignUp);
         progressBar = findViewById(R.id.progress);
 
+        // When the login button is pressed, check if the data is entered correctly
+        // then pass the data to the the Firebase Authentication
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Show a progress bar and remove the sign-up button
+                progressBar.setVisibility(View.VISIBLE);
+                btnLogin.setVisibility(View.INVISIBLE);
+
                 if (checkDataEntered()) {
                     String userEmail = email.getText().toString();
                     String userPassword = password.getText().toString();
                     signIn(userEmail, userPassword);
                 }   else {
+                    // If the data was entered incorrectly, display the login button again
                     progressBar.setVisibility(View.GONE);
                     btnLogin.setVisibility(View.VISIBLE);
                 }
@@ -70,18 +77,19 @@ public class Login extends AppCompatActivity {
     }
 
     boolean isEmail(EditText text) {
+        // Check if the email field is filled with an email of a valid format
         CharSequence email = text.getText().toString();
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
     boolean isEmpty(EditText text) {
+        // Check if the text view is empty
         CharSequence str = text.getText().toString();
         return TextUtils.isEmpty(str);
     }
 
     boolean checkDataEntered() {
-        progressBar.setVisibility(View.VISIBLE);
-        btnLogin.setVisibility(View.INVISIBLE);
+        // Check if each field is filled and display an error message if not
         if (!isEmail(email)) {
             Toast.makeText(this, "Enter an e-mail address to register", Toast.LENGTH_SHORT).show();
             email.setError("Enter valid email!");

@@ -1,40 +1,35 @@
 package com.example.csis_330smartlock;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.vishnusivadas.advanced_httpurlconnection.PutData;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author David Liang, Mohanned Odeh
+ */
 public class SignUp extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
     EditText firstName;
@@ -50,7 +45,7 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-
+        mAuth = FirebaseAuth.getInstance();
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
         email = findViewById(R.id.email);
@@ -59,8 +54,8 @@ public class SignUp extends AppCompatActivity {
         txtLogin = findViewById(R.id.txtLogin);
         progressBar = findViewById(R.id.progress);
 
-        mAuth = FirebaseAuth.getInstance();
-
+        // When the sign up button is pressed, check if the data is entered correctly
+        // then pass the data to the the Firebase Authentication
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,11 +68,16 @@ public class SignUp extends AppCompatActivity {
 //                user.put("Last Name", ln);
 //                users.document(userEmail).set(user);
 
+                // Show a progress bar and remove the sign-up button
+                progressBar.setVisibility(View.VISIBLE);
+                btnSignUp.setVisibility(View.INVISIBLE);
+
                 if (checkDataEntered()) {
                     String userEmail = email.getText().toString();
                     String userPassword = password.getText().toString();
                     createAccount(userEmail, userPassword);
                 } else {
+                    // If the data was entered incorrectly, display the login button again
                     progressBar.setVisibility(View.GONE);
                     btnSignUp.setVisibility(View.VISIBLE);
                 }
@@ -188,19 +188,19 @@ public class SignUp extends AppCompatActivity {
     }
 
     boolean isEmail(EditText text) {
+        // Check if the email field is filled with an email of a valid format
         CharSequence email = text.getText().toString();
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
     boolean isEmpty(EditText text) {
+        // Check if the text view is empty
         CharSequence str = text.getText().toString();
         return TextUtils.isEmpty(str);
     }
 
     boolean checkDataEntered() {
-        // Check if form is filled correctly
-        progressBar.setVisibility(View.VISIBLE);
-        btnSignUp.setVisibility(View.INVISIBLE);
+        // Check if each field is filled and display an error message if not
         if (isEmpty(firstName)) {
             Toast.makeText(this, "You must enter first name to register!", Toast.LENGTH_SHORT).show();
             firstName.setError("First name is required!");

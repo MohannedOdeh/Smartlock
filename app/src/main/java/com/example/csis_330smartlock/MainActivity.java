@@ -1,19 +1,16 @@
 package com.example.csis_330smartlock;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -22,7 +19,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -31,10 +27,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.HashMap;
-import java.util.Map;
-
-
+/**
+ * @author David Liang, Mohanned Odeh
+ */
 public class MainActivity extends AppCompatActivity {
     String lockerID;
     ProgressBar progressBar;
@@ -109,22 +104,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void toLockers (View view) {
-        Intent intent = new Intent(this, LockerRegistration.class);
-        startActivity(intent);
-    }
-
-    public void toPayment (View view){
-        Intent intent = new Intent(this, Payment.class);
-        startActivity(intent);
-    }
-
+    // Go to the page that displays the profile information
     public void toUserProfile (View view){
         Intent intent = new Intent(this, UserProfile.class);
         startActivity(intent);
     }
 
+    // Go to the page to add fund
+    public void toPayment (View view){
+        Intent intent = new Intent(this, Payment.class);
+        startActivity(intent);
+    }
+
+    // Go to the locker registration page
+    public void toLockers (View view) {
+        Intent intent = new Intent(this, LockerRegistration.class);
+        startActivity(intent);
+    }
+
+    // Deregisters the locker from the user's account
     public void deregisterLocker (View view){
+        // Empty the Reserved Locker field of the user's account
         usersDocRef
                 .update("Reserved Locker", "None")
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -139,12 +139,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.w(TAG, "Error updating document", e);
                     }
                 });
-
-
-
-//        Map<String, Object> locker = new HashMap<>();
-//        locker.put("reserved", false);
-//        locker.document(userid).update(user);
 
         //Update the reservation status of the locker
         locker
@@ -183,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    // Sign out from the current account
     public void signOut (View view){
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(getApplicationContext(), Login.class);
