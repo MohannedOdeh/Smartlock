@@ -60,10 +60,10 @@ public class LockerRegistration extends AppCompatActivity{
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     String userid = currentUser.getUid();
-    DocumentReference userDocRef = db.collection("users").document(userid);
-
-    CollectionReference lockers = db.collection("lockers");
     CollectionReference users = db.collection("users");
+    DocumentReference userDocRef = users.document(userid);
+    CollectionReference lockers = db.collection("lockers");
+
     double minimum = 1;
 
     @Override
