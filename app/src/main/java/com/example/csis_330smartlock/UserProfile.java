@@ -66,7 +66,11 @@ public class UserProfile extends AppCompatActivity {
                         userFirstName.setText(firstName);
                         userLastName.setText(lastName);
                         userEmail.setText(email);
-                        reservedLocker.setText(locker);
+                        String building = locker.substring(1, 2);
+                        String floor = locker.substring(3, 4);
+                        String number = locker.substring(5, 7);
+                        String display = "Building : "+ building + "\nFloor : " + floor + "\nLocker : " + number;
+                        reservedLocker.setText(display);
                         String balance = Double.toString(currentBalance);
                         userCurrentBalance.setText(balance);
                     } else {

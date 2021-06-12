@@ -13,6 +13,7 @@
         android:layout_marginTop="160dp"
         android:text="Profile"
         android:textSize="26sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -91,7 +92,7 @@
         android:id="@+id/userCurrentBalance"
         android:layout_width="175dp"
         android:layout_height="35dp"
-        android:layout_marginStart="36dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/userCurrentBalanceLabel"
         app:layout_constraintTop_toTopOf="@+id/userCurrentBalanceLabel" />
 
@@ -109,9 +110,8 @@
     <TextView
         android:id="@+id/reservedLocker"
         android:layout_width="175dp"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toEndOf="@+id/reservedLockerLabel"
         app:layout_constraintTop_toTopOf="@+id/reservedLockerLabel" />
 
