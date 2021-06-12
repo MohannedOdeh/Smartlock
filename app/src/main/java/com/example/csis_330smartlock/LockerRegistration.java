@@ -266,21 +266,6 @@ public class LockerRegistration extends AppCompatActivity{
                                     Map<String, Object> map = dc.getDocument().getData();
 
                                     setLockerColor(map);
-//                                    long lockerNumber = (long) map.get("number");
-//                                    boolean reserved = (boolean) map.get("reserved");
-//
-//                                    // Search for the image with the corresponding number and change its status
-//                                    String imgID = "img" + lockerNumber;
-//                                    int rImgID = getResources().getIdentifier(imgID, "id", getPackageName());
-//                                    ImageView img = findViewById(rImgID);
-//                                    if (reserved) {
-//                                        img.setImageResource(R.drawable.ic_locked);
-//                                        img.setClickable(false);
-//                                        img.setBackgroundResource(0);
-//                                    } else {
-//                                        img.setImageResource(R.drawable.ic_unlocked);
-//                                        img.setClickable(true);
-//                                    }
                                     break;
                                 case ADDED:
                                     Log.d(TAG, "Locker: " + dc.getDocument().getData());

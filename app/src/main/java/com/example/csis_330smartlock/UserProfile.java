@@ -68,6 +68,10 @@ public class UserProfile extends AppCompatActivity {
                         userEmail.setText(email);
                         if (!locker.equals("None")) {
                             String building = locker.substring(1, 2);
+                            if (building.equals("1"))
+                                building = "A";
+                            else if (building.equals("2"))
+                                building = "B";
                             String floor = locker.substring(3, 4);
                             String number = locker.substring(5, 7);
                             String display = "Building : " + building + "\nFloor : " + floor + "\nLocker : " + number;
